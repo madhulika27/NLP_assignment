@@ -3,20 +3,15 @@ import nltk
 nltk.download('brown')
 from nltk.corpus import brown
 
-
-
-# Function to scramble a word
 def scramble_word(word):
     letters = list(word.lower())
     random.shuffle(letters)
     scrambled = ''.join(letters)
-    # Ensure the scrambled word is not the same as the original word
     while scrambled == word.lower():
         random.shuffle(letters)
         scrambled = ''.join(letters)
     return scrambled
 
-# Main game loop
 def word_scrambler_game():
     num_letters = int(input("Enter the initial length of words you want to guess: "))
     score = 0
@@ -38,7 +33,6 @@ def word_scrambler_game():
                 length_changed = True
                 prev_score_for_change = score
 
-        # Load the Brown corpus and calculate unigram probabilities for the specified length
         words = brown.words()
         possible_words = [word for word in words if len(word) == num_letters and word.islower()]
         word_freq = nltk.FreqDist(possible_words)
@@ -56,7 +50,6 @@ def word_scrambler_game():
         example_sent_2 = None
 
         while attempts < 3:
-            # User input for guess
             user_guess = input("Enter your guess (or '0' to quit): ").lower()
 
             if user_guess == '0':
@@ -71,7 +64,6 @@ def word_scrambler_game():
             else:
                 if attempts == 0:
                     print("Incorrect guess! Here's a sentence where the word is used:")
-                    # Fetch a sentence where the word is used
                     sentences = brown.sents(categories='news')
                     for sent in sentences:
                         if random_word in sent and (not example_sent_1 or random_word not in example_sent_1):
@@ -80,7 +72,6 @@ def word_scrambler_game():
                             break
                 elif attempts == 1:
                     print("Incorrect guess again! Here's another example sentence:")
-                    # Fetch another sentence where the word is used, ensuring it's different from the first one
                     for sent in sentences:
                         if random_word in sent and (not example_sent_2 or random_word not in example_sent_2) and random_word not in example_sent_1:
                             example_sent_2 = ' '.join(sent)
@@ -92,7 +83,7 @@ def word_scrambler_game():
 
         if not correct:
             print(f"Sorry, you didn't guess the word. The correct answer was: {random_word}")
-            score -= 1  # Penalize for not guessing correctly within three attempts
+            score -= 1  
             if score < 0:
                 score = 0
 
